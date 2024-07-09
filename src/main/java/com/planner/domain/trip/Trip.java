@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
+@Table(name = "trips")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +24,7 @@ public class Trip {
     private UUID id;
 
     @Column(nullable = false)
-    private String destinantion;
+    private String destination;
 
     @Column(name = "starts_at", nullable = false)
     private LocalDateTime startsAt;
@@ -42,7 +43,7 @@ public class Trip {
 
     //Construtor passando para data
     public Trip(TripRequestPayload data){
-        this.destinantion = data.destination();
+        this.destination = data.destination();
         this.isConfirmed = false;
         this.ownerEmail = data.owner_email();
         this.ownerName = data.owner_name();
