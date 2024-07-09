@@ -2,11 +2,20 @@ package com.planner.domain.trip;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Trip {
 
     @Id
@@ -30,5 +39,16 @@ public class Trip {
 
     @Column(name = "owner_email", nullable = false)
     private String ownerEmail;
+
+    //Construtor passando para data
+    public Trip(TripRequestPayload data){
+        this.destinantion = data.destination();
+        this.isConfirmed = false;
+        this.ownerEmail = data.owner_email();
+        this.ownerName = data.owner_name();
+        this.startsAt = LocalDateTime.parse(data.starts_at(), DateTimeFormatter.ISO_DATE_TIME); //parse para a forma que recebe do front end
+        this.endsAt = LocalDateTime.parse(data.ends_at(), DateTimeFormatter.ISO_DATE_TIME); //parse para a forma que recebe do front end
+
+    }
 
 }
