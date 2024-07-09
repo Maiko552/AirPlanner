@@ -2,6 +2,7 @@ package com.planner.controller;
 
 import com.planner.domain.participant.ParticipantService;
 import com.planner.domain.trip.Trip;
+import com.planner.domain.trip.TripCreateResponse;
 import com.planner.domain.trip.TripRequestPayload;
 import com.planner.repositories.TripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class TripController {
     private TripRepository repository;
 
     @PostMapping
-    public ResponseEntity<String> createTrip(@RequestBody TripRequestPayload payload){
+    public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestPayload payload){
         Trip newTrip = new Trip(payload);
 
         this.repository.save(newTrip);
 
         this.participantService.registerParticipantToEvent(payload.emails_to_invite(), newTrip.getId());
 
-        return ResponseEntity.ok("Sucesso!");
+        return ResponseEntity.ok(new TripCreateResponse(newTrip.getId()));
     }
 }
