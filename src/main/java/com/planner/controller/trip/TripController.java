@@ -1,5 +1,7 @@
 package com.planner.controller.trip;
 
+import com.planner.domain.participant.ParticipantCreateResponse;
+import com.planner.domain.participant.ParticipantRequestPayload;
 import com.planner.service.participant.ParticipantService;
 import com.planner.domain.trip.Trip;
 import com.planner.domain.trip.TripCreateResponse;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -62,7 +66,7 @@ public class TripController {
     }
 
 
-        @GetMapping("/{id}/confirm")
+    @GetMapping("/{id}/confirm")
     public ResponseEntity<Trip> confirmTrip(@PathVariable UUID id){
         Optional<Trip> trip = this.repository.findById(id);
 
@@ -77,6 +81,25 @@ public class TripController {
             this.participantService.triggerConfirmationEmailToParticipants(id);
 
             return ResponseEntity.ok(rawTrip);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    //trips
+    @PostMapping("/{id}/invite")
+    public ResponseEntity<ParticipantCreateResponse> inviteParticipant(@PathVariable UUID id, @RequestBody ParticipantRequestPayload payload){
+        Optional<Trip> trip = this.repository.findById(id);
+
+        if (trip.isPresent()){
+            //Se estiver presente extrair ele/extrair o obj orignal
+            Trip rawTrip = trip.get();
+
+            ParticipantCreateResponse participantResponse = this.participantService.registerOneParticipantToEvent((payload.email()), rawTrip);
+
+            if (rawTrip.getIsConfirmed()) this.participantService.triggerConfirmationEmailToOneParticipant(payload.email());
+
+            return ResponseEntity.ok(participantResponse);
         }
 
         return ResponseEntity.notFound().build();
