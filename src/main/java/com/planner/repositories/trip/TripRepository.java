@@ -1,4 +1,4 @@
-package com.planner.repositories;
+package com.planner.repositories.trip;
 
 
 import com.planner.domain.trip.Trip;

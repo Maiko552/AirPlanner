@@ -1,4 +1,4 @@
-package com.planner.domain.participant;
+package com.planner.service.participant;
 
 import org.springframework.stereotype.Service;
 

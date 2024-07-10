@@ -1,10 +1,10 @@
-package com.planner.controller;
+package com.planner.controller.trip;
 
 import com.planner.service.participant.ParticipantService;
 import com.planner.domain.trip.Trip;
 import com.planner.domain.trip.TripCreateResponse;
 import com.planner.domain.trip.TripRequestPayload;
-import com.planner.repositories.TripRepository;
+import com.planner.repositories.trip.TripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
