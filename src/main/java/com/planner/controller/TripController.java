@@ -1,6 +1,6 @@
 package com.planner.controller;
 
-import com.planner.domain.participant.ParticipantService;
+import com.planner.service.participant.ParticipantService;
 import com.planner.domain.trip.Trip;
 import com.planner.domain.trip.TripCreateResponse;
 import com.planner.domain.trip.TripRequestPayload;
@@ -20,6 +20,7 @@ public class TripController {
 
     @Autowired
     private ParticipantService participantService;
+
     @Autowired
     private TripRepository repository;
 
@@ -36,6 +37,7 @@ public class TripController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Trip> getTripDetails(@PathVariable UUID id){
+        //Procurar no repositorio
         Optional<Trip> trip = this.repository.findById(id);
 
         return trip.map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
@@ -57,5 +59,26 @@ public class TripController {
         }
 
         return trip.map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
+    }
+
+
+        @GetMapping("/{id}/confirm")
+    public ResponseEntity<Trip> confirmTrip(@PathVariable UUID id){
+        Optional<Trip> trip = this.repository.findById(id);
+
+        if (trip.isPresent()){
+            //Se estiver presente extrair ele/extrair o obj orignal
+            Trip rawTrip = trip.get();
+
+            //Se encontrar mude para true
+           rawTrip.setIsConfirmed(true);
+
+            this.repository.save(rawTrip);
+            this.participantService.triggerConfirmationEmailToParticipants(id);
+
+            return ResponseEntity.ok(rawTrip);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
