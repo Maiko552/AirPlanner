@@ -1,5 +1,8 @@
 package com.planner.controller.trip;
 
+import com.planner.domain.activities.ActivityData;
+import com.planner.domain.activities.ActivityRequestPayload;
+import com.planner.domain.activities.ActivityResponse;
 import com.planner.domain.participant.ParticipantCreateResponse;
 import com.planner.domain.participant.ParticipantData;
 import com.planner.domain.participant.ParticipantRequestPayload;
@@ -7,6 +10,7 @@ import com.planner.domain.trip.Trip;
 import com.planner.domain.trip.TripCreateResponse;
 import com.planner.domain.trip.TripRequestPayload;
 import com.planner.repositories.trip.TripRepository;
+import com.planner.service.Activities.ActivityService;
 import com.planner.service.participant.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/trips")
 public class TripController {
+
+    @Autowired
+    private ActivityService activityService;
 
     @Autowired
     private ParticipantService participantService;
@@ -111,4 +118,29 @@ public class TripController {
 
         return ResponseEntity.ok(participantsList);
     }
+
+    @GetMapping("/{id}/activities")
+    public ResponseEntity<List<ActivityData>> getAllActivities(@PathVariable UUID id){
+        List<ActivityData> activityData = this.activityService.getAllActivitiesFromId(id);
+
+        return ResponseEntity.ok(activityData);
+    }
+
+    @PostMapping("/{id}/activities")
+    public ResponseEntity<ActivityResponse> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestPayload payload){
+
+        Optional<Trip> trip = this.repository.findById(id);
+
+        if (trip.isPresent()){
+            //Se estiver presente extrair ele/extrair o obj orignal
+            Trip rawTrip = trip.get();
+
+            ActivityResponse activityResponse = this.activityService.registerActivity(payload, rawTrip );
+
+            return ResponseEntity.ok(activityResponse);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
 }
