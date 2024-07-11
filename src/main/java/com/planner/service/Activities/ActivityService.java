@@ -4,7 +4,6 @@ import com.planner.domain.activities.Activity;
 import com.planner.domain.activities.ActivityData;
 import com.planner.domain.activities.ActivityRequestPayload;
 import com.planner.domain.activities.ActivityResponse;
-import com.planner.domain.participant.ParticipantData;
 import com.planner.domain.trip.Trip;
 import com.planner.repositories.activities.ActivitiesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
