@@ -1,19 +1,19 @@
 package com.planner.controller.trip;
 
 import com.planner.domain.participant.ParticipantCreateResponse;
+import com.planner.domain.participant.ParticipantData;
 import com.planner.domain.participant.ParticipantRequestPayload;
-import com.planner.service.participant.ParticipantService;
 import com.planner.domain.trip.Trip;
 import com.planner.domain.trip.TripCreateResponse;
 import com.planner.domain.trip.TripRequestPayload;
 import com.planner.repositories.trip.TripRepository;
+import com.planner.service.participant.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -103,5 +103,12 @@ public class TripController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{id}/participant")
+    public ResponseEntity<List<ParticipantData>> getAllParticipants(@PathVariable UUID id){
+        List<ParticipantData> participantsList = this.participantService.getAllParticipantsFromEvent(id);
+
+        return ResponseEntity.ok(participantsList);
     }
 }

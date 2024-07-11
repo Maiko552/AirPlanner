@@ -2,6 +2,7 @@ package com.planner.service.participant;
 
 import com.planner.domain.participant.Participant;
 import com.planner.domain.participant.ParticipantCreateResponse;
+import com.planner.domain.participant.ParticipantData;
 import com.planner.domain.trip.Trip;
 import com.planner.repositories.participant.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,4 +35,8 @@ public class ParticipantService {
     public void triggerConfirmationEmailToParticipants(UUID tripId){}
 
     public void triggerConfirmationEmailToOneParticipant(String email){}
+
+    public List<ParticipantData> getAllParticipantsFromEvent(UUID tripId){
+        return this.repository.findByTripId(tripId).stream().map(participant -> new ParticipantData(participant.getId(), participant.getName(), participant.getEmail(), participant.getIsConfirmed())).toList();
+    }
 }
