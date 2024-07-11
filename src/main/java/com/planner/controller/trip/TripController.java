@@ -3,6 +3,7 @@ package com.planner.controller.trip;
 import com.planner.domain.activities.ActivityData;
 import com.planner.domain.activities.ActivityRequestPayload;
 import com.planner.domain.activities.ActivityResponse;
+import com.planner.domain.links.LinkData;
 import com.planner.domain.links.LinkRequestPayload;
 import com.planner.domain.links.LinkResponse;
 import com.planner.domain.participant.ParticipantCreateResponse;
@@ -150,6 +151,7 @@ public class TripController {
     }
 
 
+    //Links
     @PostMapping("/{id}/links")
     public ResponseEntity<LinkResponse> registerLink(@PathVariable UUID id, @RequestBody LinkRequestPayload payload){
 
@@ -165,5 +167,12 @@ public class TripController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{id}/links")
+    public ResponseEntity<List<LinkData>> getAllLinks(@PathVariable UUID id){
+        List<LinkData> linkData = this.linkService.getAllLinksFromTrip(id);
+
+        return ResponseEntity.ok(linkData);
     }
 }

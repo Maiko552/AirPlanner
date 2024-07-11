@@ -2,6 +2,7 @@ package com.planner.service.links;
 
 import com.planner.domain.activities.ActivityData;
 import com.planner.domain.links.Link;
+import com.planner.domain.links.LinkData;
 import com.planner.domain.links.LinkRequestPayload;
 import com.planner.domain.links.LinkResponse;
 import com.planner.domain.trip.Trip;
@@ -27,7 +28,7 @@ public class LinkService {
         return new LinkResponse(newLink.getId());
     }
 
-    public List<ActivityData> getAllActivitiesFromId(UUID tripId){
-        return new ArrayList<>();
+    public List<LinkData> getAllLinksFromTrip(UUID tripId){
+        return this.repository.findByTripId(tripId).stream().map(link -> new LinkData(link.getId(), link.getTitle(), link.getUrl())).toList();
     }
 }
